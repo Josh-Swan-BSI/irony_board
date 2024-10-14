@@ -34,7 +34,7 @@
 
         .irony-image {
             max-width: 100%;
-            max-height: 400px;
+            max-height: 250px;
             display: none;
             animation: fadeIn 1s ease-in-out;
             margin-top: 20px;
@@ -48,16 +48,14 @@
         }
 
         .typer-text {
-    display: none;
-    font-size: 1.5rem;
-    margin-top: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 3px solid;
-    /* Remove the animation property */
-    /* animation: typing 3.5s steps(40, end); */
-    color: #555;
-}
+            display: none;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid;
+            color: #555;
+        }
 
         @keyframes typing {
             from { width: 0; }
@@ -102,42 +100,69 @@
         const images = [
             { src: 'image1.jpg', text: 'Ah, censorship—truly a masterclass in self-awareness.' },
             { src: 'image2.jpg', text: 'When safety begins with you, but ends with someone else.' },
-            { src: 'image3.jpg', text: 'On the road to success, there are no shortcuts... except maybe underestimating height restrictions.' },
+            { src: 'image3.jpg', text: 'On the road to success, there are no shortcuts... except maybe height restrictions.' },
             { src: 'image4.jpg', text: "Nothing says 'Be Different' like joining a synchronized parade of individuality." },
-            { src: 'image5.jpg', text: 'For when irony calls... except you can’t.' }
+            { src: 'image5.jpg', text: 'For when irony calls... except you can’t.' },
+            { src: 'image6.jpg', text: 'Texting while driving kills... unless it’s about safety tips while on the road.' },
+            { src: 'image7.jpg', text: 'Do they assume we all carry with us a pocket hammer for situations like this?' },
+            { src: 'image8.jpg', text: 'This is like emailing your internet provider when your internet is down...' },
+            { src: 'image9.jpg', text: 'Safety guaranteed... as long as you’re willing to risk it all.' },
+            { src: 'image10.jpg', text: 'Non-stick pan, except for the label. That’s here to stay.' }
         ];
 
-        const randomBtn = document.getElementById('randomBtn');
-        const ironyImage = document.getElementById('ironyImage');
-        const typerText = document.getElementById('typerText');
+        let shuffledImages = [];
+        let currentIndex = 0;
 
-        function displayRandomIrony() {
-        // Randomly select an image and text
-        const randomIndex = Math.floor(Math.random() * images.length);
-        const selectedImage = images[randomIndex];
-
-        // Set the image source and show it with animation
-        ironyImage.src = selectedImage.src;
-        ironyImage.style.display = 'block';
-
-        // Set the typer text
-        typerText.style.display = 'block';
-        typerText.textContent = '';
-        
-        // Type out the text character by character
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i < selectedImage.text.length) {
-                typerText.textContent += selectedImage.text[i];
-                i++;
-            } else {
-                clearInterval(interval);
+        // Function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
-        }, 50); // Adjust speed as needed
-    }
+            return array;
+        }
 
+        // Shuffle the images array on page load
+        function initializeImages() {
+            shuffledImages = shuffleArray([...images]);
+        }
 
-        randomBtn.addEventListener('click', displayRandomIrony);
+        // Display the next image and text in the shuffled order
+        function displayNextIrony() {
+            const selectedImage = shuffledImages[currentIndex];
+
+            // Set the image source and show it with animation
+            ironyImage.src = selectedImage.src;
+            ironyImage.style.display = 'block';
+
+            // Set the typer text
+            typerText.style.display = 'block';
+            typerText.textContent = '';
+
+            // Type out the text character by character
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < selectedImage.text.length) {
+                    typerText.textContent += selectedImage.text[i];
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 10); // Adjust speed as needed
+
+            // Move to the next index, or reshuffle when all images have been shown
+            currentIndex++;
+            if (currentIndex >= shuffledImages.length) {
+                currentIndex = 0;
+                initializeImages(); // Reshuffle after one complete cycle
+            }
+        }
+
+        // Initialize on page load
+        initializeImages();
+
+        // Button event listener
+        randomBtn.addEventListener('click', displayNextIrony);
     </script>
 </body>
 </html>
